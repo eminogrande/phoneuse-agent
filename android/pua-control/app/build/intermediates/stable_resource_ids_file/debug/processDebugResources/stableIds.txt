@@ -1,0 +1,5 @@
+com.phoneuse.control:xml/accessibility_service = 0x7f020000
+com.phoneuse.control:string/notification_listener_label = 0x7f010003
+com.phoneuse.control:string/app_name = 0x7f010002
+com.phoneuse.control:string/accessibility_service_label = 0x7f010001
+com.phoneuse.control:string/accessibility_service_description = 0x7f010000

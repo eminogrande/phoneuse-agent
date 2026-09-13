@@ -1,0 +1,5 @@
+int string accessibility_service_description 0x7f010000
+int string accessibility_service_label 0x7f010001
+int string app_name 0x7f010002
+int string notification_listener_label 0x7f010003
+int xml accessibility_service 0x7f020000

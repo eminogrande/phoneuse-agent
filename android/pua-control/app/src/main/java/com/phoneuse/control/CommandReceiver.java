@@ -62,6 +62,15 @@ public class CommandReceiver extends BroadcastReceiver {
         if ("com.phoneuse.control.CLICK".equals(action)) {
             boolean ok = service.click(intent.getIntExtra("x", 0), intent.getIntExtra("y", 0));
             setResultData("click=" + ok);
+        } else if ("com.phoneuse.control.SWIPE".equals(action)) {
+            boolean ok = service.swipe(intent.getIntExtra("x1", 0), intent.getIntExtra("y1", 0),
+                    intent.getIntExtra("x2", 0), intent.getIntExtra("y2", 0),
+                    intent.getIntExtra("duration", 350));
+            setResultData("swipe=" + ok);
+        } else if ("com.phoneuse.control.LONG_PRESS".equals(action)) {
+            boolean ok = service.longPress(intent.getIntExtra("x", 0), intent.getIntExtra("y", 0),
+                    intent.getIntExtra("duration", 800));
+            setResultData("longPress=" + ok);
         } else if ("com.phoneuse.control.CLICK_ID".equals(action)) {
             String viewId = intent.getStringExtra("viewId");
             boolean ok = service.clickByViewId(viewId);

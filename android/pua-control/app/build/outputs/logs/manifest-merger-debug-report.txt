@@ -1,0 +1,127 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:2:1-49:12
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:2:1-49:12
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:2:1-49:12
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:2:1-49:12
+	package
+		INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:3:5-48:19
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:3:5-48:19
+	android:extractNativeLibs
+		INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+	android:label
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:5:9-41
+	android:allowBackup
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:4:9-36
+	android:theme
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:6:9-66
+service#com.phoneuse.control.PuaAccessibilityService
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:7:9-18:19
+	android:label
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:10:13-64
+	android:exported
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:9:13-36
+	android:permission
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:11:13-79
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:8:13-52
+intent-filter#action:name:android.accessibilityservice.AccessibilityService
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:12:13-14:29
+action#android.accessibilityservice.AccessibilityService
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:13:17-92
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:13:25-89
+meta-data#android.accessibilityservice
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:15:13-17:65
+	android:resource
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:17:17-62
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:16:17-60
+service#com.phoneuse.control.PuaNotificationListenerService
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:20:9-28:19
+	android:label
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:23:13-64
+	android:exported
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:22:13-36
+	android:permission
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:24:13-87
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:21:13-59
+intent-filter#action:name:android.service.notification.NotificationListenerService
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:25:13-27:29
+action#android.service.notification.NotificationListenerService
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:26:17-99
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:26:25-96
+receiver#com.phoneuse.control.CommandReceiver
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:30:9-47:20
+	android:exported
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:32:13-36
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:31:13-44
+intent-filter#action:name:com.phoneuse.control.CLEAR_EVENTS+action:name:com.phoneuse.control.CLICK+action:name:com.phoneuse.control.CLICK_ID+action:name:com.phoneuse.control.DUMP+action:name:com.phoneuse.control.EVENTS+action:name:com.phoneuse.control.GLOBAL_ACTION+action:name:com.phoneuse.control.LAUNCH+action:name:com.phoneuse.control.NOTIFICATIONS+action:name:com.phoneuse.control.OPEN_NOTIFICATION+action:name:com.phoneuse.control.OPEN_URL+action:name:com.phoneuse.control.SET_FOCUSED_TEXT+action:name:com.phoneuse.control.SET_TEXT
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:33:13-46:29
+action#com.phoneuse.control.CLICK
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:34:17-69
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:34:25-66
+action#com.phoneuse.control.CLICK_ID
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:35:17-72
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:35:25-69
+action#com.phoneuse.control.SET_TEXT
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:36:17-72
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:36:25-69
+action#com.phoneuse.control.SET_FOCUSED_TEXT
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:37:17-80
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:37:25-77
+action#com.phoneuse.control.DUMP
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:38:17-68
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:38:25-65
+action#com.phoneuse.control.EVENTS
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:39:17-70
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:39:25-67
+action#com.phoneuse.control.CLEAR_EVENTS
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:40:17-76
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:40:25-73
+action#com.phoneuse.control.NOTIFICATIONS
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:41:17-77
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:41:25-74
+action#com.phoneuse.control.OPEN_NOTIFICATION
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:42:17-81
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:42:25-78
+action#com.phoneuse.control.LAUNCH
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:43:17-70
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:43:25-67
+action#com.phoneuse.control.OPEN_URL
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:44:17-72
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:44:25-69
+action#com.phoneuse.control.GLOBAL_ACTION
+ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:45:17-77
+	android:name
+		ADDED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml:45:25-74
+uses-sdk
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/AndroidManifest.xml

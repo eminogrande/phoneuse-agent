@@ -42,6 +42,13 @@ def act(a: dict) -> str:
     ac = a.get("action")
     if ac == "click":
         return broadcast("CLICK", "--ei", "x", str(a["x"]), "--ei", "y", str(a["y"]))[:200]
+    if ac == "swipe":
+        return broadcast("SWIPE", "--ei", "x1", str(a["x1"]), "--ei", "y1", str(a["y1"]),
+                         "--ei", "x2", str(a["x2"]), "--ei", "y2", str(a["y2"]),
+                         "--ei", "duration", str(a.get("duration", 350)))[:200]
+    if ac == "long_press":
+        return broadcast("LONG_PRESS", "--ei", "x", str(a["x"]), "--ei", "y", str(a["y"]),
+                         "--ei", "duration", str(a.get("duration", 800)))[:200]
     if ac == "click_id":
         return broadcast("CLICK_ID", "--es", "viewId", a["id"])[:200]
     if ac == "set_text":
@@ -59,6 +66,8 @@ def act(a: dict) -> str:
 SYSTEM = """You are a phone-use agent running on the phone. You receive the accessibility tree (class|resourceId|textOrDesc|bounds=[x1,y1][x2,y2]) and reply with ONE JSON action.
 Actions:
 {"action":"click","x":540,"y":600}  — tap center of an element's bounds
+{"action":"swipe","x1":540,"y1":1800,"x2":540,"y2":800,"duration":350}  — scroll lists
+{"action":"long_press","x":540,"y":600,"duration":800}
 {"action":"click_id","id":"pkg:id/name"}
 {"action":"set_text","id":"pkg:id/name","text":"..."}
 {"action":"type","text":"..."}  — into focused field

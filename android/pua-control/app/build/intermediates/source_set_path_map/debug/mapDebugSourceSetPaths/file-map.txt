@@ -1,0 +1,7 @@
+com.phoneuse.control.app-pngs-0 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/generated/res/pngs/debug
+com.phoneuse.control.app-resValues-1 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/generated/res/resValues/debug
+com.phoneuse.control.app-packageDebugResources-2 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.phoneuse.control.app-packageDebugResources-3 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.phoneuse.control.app-debug-4 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/intermediates/merged_res/debug/mergeDebugResources
+com.phoneuse.control.app-debug-5 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/debug/res
+com.phoneuse.control.app-main-6 /Users/eminmahrt/phoneuse-agent/android/pua-control/app/src/main/res

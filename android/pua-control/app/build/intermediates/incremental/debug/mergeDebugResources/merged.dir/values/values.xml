@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_service_description">Lets an on-device agent read the screen and operate apps on this phone.</string>
+    <string name="accessibility_service_label">PhoneUse Control</string>
+    <string name="app_name">PhoneUse Control</string>
+    <string name="notification_listener_label">PhoneUse Notification Listener</string>
+</resources>

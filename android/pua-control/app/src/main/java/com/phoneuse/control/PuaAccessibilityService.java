@@ -46,6 +46,25 @@ public class PuaAccessibilityService extends AccessibilityService {
         return dispatchGesture(gesture, null, null);
     }
 
+    boolean swipe(int x1, int y1, int x2, int y2, int durationMs) {
+        Path path = new Path();
+        path.moveTo(x1, y1);
+        path.lineTo(x2, y2);
+        GestureDescription gesture = new GestureDescription.Builder()
+                .addStroke(new GestureDescription.StrokeDescription(path, 0, Math.max(50, durationMs)))
+                .build();
+        return dispatchGesture(gesture, null, null);
+    }
+
+    boolean longPress(int x, int y, int durationMs) {
+        Path path = new Path();
+        path.moveTo(x, y);
+        GestureDescription gesture = new GestureDescription.Builder()
+                .addStroke(new GestureDescription.StrokeDescription(path, 0, Math.max(600, durationMs)))
+                .build();
+        return dispatchGesture(gesture, null, null);
+    }
+
     boolean globalAction(String name) {
         if (name == null) return false;
         if ("home".equals(name)) {
