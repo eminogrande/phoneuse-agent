@@ -122,8 +122,36 @@ public class PuaAccessibilityService extends AccessibilityService {
             startActivity(launchIntent);
             return true;
         } catch (RuntimeException ex) {
-            return false;
+            // Background Activity Launch blocked (e.g. right after boot):
+            // fall back to the human path — go home and tap the app icon.
+            return launchViaLauncher(packageManager, packageName);
         }
+    }
+
+    private boolean launchViaLauncher(PackageManager pm, String packageName) {
+        try {
+            String label = String.valueOf(pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)));
+            performGlobalAction(GLOBAL_ACTION_HOME);
+            for (int attempt = 0; attempt < 8; attempt++) {
+                Thread.sleep(600);
+                AccessibilityNodeInfo root = getRootInActiveWindow();
+                if (root == null) continue;
+                List<AccessibilityNodeInfo> byText = root.findAccessibilityNodeInfosByText(label);
+                if (byText != null) {
+                    for (AccessibilityNodeInfo node : byText) {
+                        AccessibilityNodeInfo n = node;
+                        while (n != null) {
+                            if (n.isClickable() && n.isEnabled()) {
+                                return n.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                            n = n.getParent();
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 
     boolean clickByViewId(String viewId) {

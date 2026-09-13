@@ -12,6 +12,17 @@ Read result:
 """
 import json, os, pathlib, subprocess, sys, time, traceback
 
+# self-sufficient: load env file (daemon starts from Termux:Boot without shell profile)
+_env = pathlib.Path.home() / ".pua.env"
+if _env.exists():
+    for line in _env.read_text().splitlines():
+        m = line.strip()
+        if m.startswith("export "):
+            m = m[7:]
+        if "=" in m:
+            k, v = m.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
 HOME = pathlib.Path.home()
 PUA = HOME / ".pua"
 TASKS = PUA / "tasks"
