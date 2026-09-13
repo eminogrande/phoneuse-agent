@@ -1,7 +1,0 @@
-#Sun Sep 13 21:14:03 CEST 2026
-base.1=/Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/intermediates/dex/debug/mergeProjectDexDebug/9/classes.dex
-path.1=9/classes.dex
-base.0=/Users/eminmahrt/phoneuse-agent/android/pua-control/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
-renamed.1=classes2.dex
-renamed.0=classes.dex
-path.0=0/classes.dex

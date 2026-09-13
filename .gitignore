@@ -34,3 +34,6 @@ bootstrap/apks/
 
 # os
 .DS_Store
+
+# gradle build output
+android/**/build/
