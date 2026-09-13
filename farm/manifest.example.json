@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "port_base": { "sshd": 8022, "adb": 5555, "portal": 8080 },
+  "defaults": {
+    "a11y_package": "com.phoneuse.control/com.phoneuse.control.PuaAccessibilityService",
+    "brain_provider": "openai_like:http://127.0.0.1:8080/v1"
+  },
+  "nodes": [
+    {
+      "index": 0,
+      "serial": "R58M00000000",
+      "name": "node-01",
+      "role": "agent+vps",
+      "model": "SM-G991B",
+      "tailscale_hostname": "pua-node-01",
+      "lan_ip": "192.168.1.50",
+      "admin_number": "+10000000000",
+      "brain_provider": "ollama:qwen3:8b",
+      "wa_account": null,
+      "usb": { "hub": "1-1", "port": "1-1.1", "uhubctl_device": "1", "controller": "ctrl0" },
+      "enabled": true
+    },
+    {
+      "index": 1,
+      "serial": "R58M00000001",
+      "name": "node-02",
+      "role": "agent+vps",
+      "model": "Pixel_7_Pro",
+      "tailscale_hostname": "pua-node-02",
+      "lan_ip": "192.168.1.51",
+      "admin_number": "+10000000000",
+      "brain_provider": "guiowl:gui-owl-1.5-8b",
+      "wa_account": null,
+      "usb": { "hub": "1-1", "port": "1-1.2", "uhubctl_device": "1", "controller": "ctrl0" },
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.phoneuse.control"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.phoneuse.control"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "0.1.0"
+    }
+}

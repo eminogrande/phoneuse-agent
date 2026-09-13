@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>phoneuse-agent</title>
+<style>
+  :root { --fg:#0f172a; --muted:#64748b; --line:#e2e8f0; --accent:#0d9488; --accent-soft:#f0fdfa; }
+  * { box-sizing: border-box; margin: 0; }
+  body { font: 17px/1.5 -apple-system, system-ui, sans-serif; color: var(--fg); background: #fff; padding: 24px; max-width: 1100px; }
+  h1 { font-size: 28px; letter-spacing: -0.02em; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); margin: 4px 0 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+  .card { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: #fff; }
+  .card + .card { margin-top: 16px; }
+  .node-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .node-head strong { flex: 0 0 auto; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1; }
+  .dot.on { background: #22c55e; }
+  .dot.off { background: #ef4444; }
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: 15px; }
+  .kv dt { color: var(--muted); }
+  .kv dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .svc { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; border: 1px solid var(--line); margin-right: 6px; }
+  .svc.ok { background: var(--accent-soft); border-color: #99f6e4; color: #0f766e; }
+  .svc.bad { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+  .pick { margin-left: auto; font-size: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; background: #fff; color: var(--fg); }
+  #screen { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #f8fafc; aspect-ratio: 9/19.5; object-fit: contain; }
+  input[type=text] { width: 100%; padding: 12px 14px; font-size: 16px; border: 1px solid var(--line); border-radius: 10px; }
+  button { margin-top: 10px; padding: 12px 22px; font-size: 16px; font-weight: 600; color: #fff; background: var(--accent); border: 0; border-radius: 999px; cursor: pointer; }
+  button:disabled { opacity: .4; cursor: default; }
+  pre { margin-top: 12px; font: 12px/1.45 ui-monospace, monospace; background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 12px; max-height: 260px; overflow: auto; white-space: pre-wrap; }
+  .pill { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<h1>phone<span>use-agent</span></h1>
+<p class="sub">Android phones as AI-operable agent nodes · local · open source</p>
+
+<div class="grid">
+  <div>
+    <div class="card" id="nodes"><p class="pill">loading…</p></div>
+    <div class="card">
+      <strong>Run agent task</strong>
+      <p class="pill" style="margin:6px 0 10px">Brain: any OpenAI-compatible endpoint · a11y-tree mode · target: <b id="target">—</b></p>
+      <input type="text" id="task" placeholder="e.g. Open Chrome and go to example.com">
+      <button id="go" onclick="startTask()">Run task</button>
+      <span class="pill" id="tstatus"></span>
+      <pre id="log" style="display:none"></pre>
+    </div>
+  </div>
+  <div class="card">
+    <p class="pill" style="margin-bottom:8px">Live screen · <b id="screenTarget">—</b> · 5s</p>
+    <img id="screen" alt="phone screen">
+  </div>
+</div>
+
+<script>
+let nodes = [];
+let selected = null;
+
+function nodeOptions(online) {
+  if (!online.length) return "";
+  if (!selected || !online.includes(selected)) selected = online[0];
+  return `<select class="pick" onchange="selectNode(this.value)">
+    ${online.map(s => `<option value="${s}" ${s === selected ? "selected" : ""}>${s}</option>`).join("")}
+  </select>`;
+}
+
+async function refreshNodes() {
+  const r = await fetch("/api/nodes");
+  nodes = await r.json();
+  const online = nodes.filter(n => n.online).map(n => n.serial);
+  document.getElementById("target").textContent = selected || (online[0] || "—");
+  document.getElementById("screenTarget").textContent = selected || "—";
+  if (!nodes.length) {
+    document.getElementById("nodes").innerHTML =
+      '<p class="pill">No nodes registered. Add serials to <code>nodes.json</code>.</p>';
+    return;
+  }
+  document.getElementById("nodes").innerHTML = nodes.map(n => `
+    <div class="node-head"><div class="dot ${n.online ? "on" : "off"}"></div>
+      <strong>${n.name}</strong> <span class="pill">${n.online ? n.model + " · Android " + n.android : "offline"}</span>
+      ${nodeOptions(online)}</div>
+    ${n.online ? `
+    <div class="kv">
+      <dt>Battery</dt><dd>${n.battery ?? "?"}% ${n.charging ? "⚡ charging" : ""} · ${n.temp ?? "?"}°C</dd>
+      <dt>IP</dt><dd>${n.ip || "—"}</dd>
+      <dt>Services</dt><dd>
+        <span class="svc ${n.sshd ? "ok" : "bad"}">sshd :8022</span>
+        <span class="svc ${n.a11y ? "ok" : "bad"}">control a11y</span>
+      </dd>
+      <dt>RAM</dt><dd style="font-size:13px;color:var(--muted)">${(n.mem||"").replace(/\n/g, " · ")}</dd>
+    </div>` : ""}
+  `).join("");
+}
+
+function selectNode(serial) { selected = serial; refreshNodes(); refreshScreen(); }
+
+async function refreshScreen() {
+  if (!selected) return;
+  try {
+    const r = await fetch("/api/screen/" + selected);
+    const d = await r.json();
+    if (d.png) document.getElementById("screen").src = "data:image/png;base64," + d.png;
+  } catch (e) {}
+}
+
+async function startTask() {
+  const task = document.getElementById("task").value.trim();
+  if (!task || !selected) return;
+  document.getElementById("go").disabled = true;
+  document.getElementById("log").style.display = "block";
+  const r = await fetch("/api/task", {method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({serial: selected, task})});
+  if (!r.ok) {
+    const e = await r.json();
+    document.getElementById("log").textContent = "error: " + (e.error || r.status);
+    document.getElementById("go").disabled = false;
+    return;
+  }
+  pollTask();
+}
+
+async function pollTask() {
+  const r = await fetch("/api/task");
+  const d = await r.json();
+  document.getElementById("log").textContent = d.log_tail || "starting…";
+  document.getElementById("tstatus").textContent = d.running ? " · running…" : " · done";
+  if (d.running) setTimeout(pollTask, 4000);
+  else document.getElementById("go").disabled = false;
+}
+
+refreshNodes(); setInterval(refreshNodes, 10000);
+setInterval(refreshScreen, 5000);
+</script>
+</body>
+</html>

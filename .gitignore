@@ -1,0 +1,36 @@
+# secrets & keys — never commit
+keys/
+*.key
+*.pem
+
+# optional local node registry override (NODES_FILE); the committed
+# farm/nodes.json is the shared template and stays tracked.
+farm/nodes.local.json
+
+# live fleet data — your real serials / LAN IPs / controller IP.
+# Copy farm/manifest.example.json -> farm/manifest.json and render locally.
+farm/manifest.json
+farm/render/
+farm/logs/
+
+# logs & device dumps
+*.log
+bootstrap/setup.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# android build output
+android/*/build/
+android/*/.gradle/
+android/*/local.properties
+*.apk
+
+# downloaded at bootstrap time, not committed
+bootstrap/apks/
+
+# os
+.DS_Store
