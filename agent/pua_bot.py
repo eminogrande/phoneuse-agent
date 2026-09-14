@@ -105,6 +105,7 @@ def notification_loop():
     log(f"notification loop up, watching {WATCH_PACKAGES} for {ADMIN_CHATS}")
     while True:
         try:
+            # path 1: status bar notifications (app in background)
             for pkg in WATCH_PACKAGES:
                 for item in notifications(pkg):
                     key = item["key"][:160]
@@ -123,6 +124,33 @@ def notification_loop():
                     (RESULTS / f"chat-{int(time.time())}.json").write_text(json.dumps(
                         {"chat": title, "msg": text, **res}, indent=2))
                     log(f"chat task done ok={res['ok']} {res['seconds']}s")
+            # path 2: active-chat polling (WhatsApp in foreground, admin chat open)
+            tree = broadcast("DUMP")
+            if "com.whatsapp:id/conversation_contact_name" in tree or "com.whatsapp:id/message_text" in tree:
+                admin_open = None
+                for c in ADMIN_CHATS:
+                    if c in tree.lower()[:3000]:
+                        admin_open = c
+                        break
+                if admin_open:
+                    import re as _re
+                    msgs = _re.findall(r'id=com\.whatsapp:id/message_text text=([^=]+) desc=', tree)
+                    if msgs:
+                        last = msgs[-1].strip()
+                        key = "fg:" + admin_open + ":" + last[:120]
+                        if last and key not in seen:
+                            seen.add(key)
+                            log(f"incoming (fg) from {admin_open}: {last[:80]}")
+                            res = run_agent(chat_task(admin_open, last))
+                            (RESULTS / f"chat-{int(time.time())}.json").write_text(json.dumps(
+                                {"chat": admin_open, "msg": last, **res}, indent=2))
+                            log(f"chat task done ok={res['ok']} {res['seconds']}s")
+                            # anti-echo: whatever is the newest message now (likely our own
+                            # reply) must not be treated as a new incoming message
+                            tree2 = broadcast("DUMP")
+                            msgs2 = _re.findall(r'id=com\.whatsapp:id/message_text text=([^=]+) desc=', tree2)
+                            if msgs2:
+                                seen.add("fg:" + admin_open + ":" + msgs2[-1].strip()[:120])
             if len(seen) > 5000:
                 seen = set(list(seen)[-2000:])
             state_f.write_text(json.dumps(sorted(seen)))
