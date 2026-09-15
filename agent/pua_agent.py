@@ -61,6 +61,9 @@ def act(a: dict) -> str:
         return broadcast("OPEN_URL", "--es", "url", a["url"])[:200]
     if ac in ("back", "home", "recents"):
         return broadcast(ac.upper())[:200]
+    if ac == "wait":
+        time.sleep(min(int(a.get("seconds", 3)), 30))
+        return f"waited {a.get('seconds', 3)}s"
     return "unknown action"
 
 SYSTEM = """You are a phone-use agent running on the phone. You receive the accessibility tree (class|resourceId|textOrDesc|bounds=[x1,y1][x2,y2]) and reply with ONE JSON action.
@@ -75,7 +78,10 @@ Actions:
 {"action":"open_url","url":"https://..."}
 {"action":"back"} {"action":"home"} {"action":"recents"}
 {"action":"done","answer":"final answer"}
-Rules: prefer click_id/set_text with full resourceIds over coordinates. Never repeat the same failing action twice. Reply ONLY with the JSON."""
+Rules: prefer click_id/set_text with full resourceIds over coordinates. Never repeat the same failing action twice. Reply ONLY with the JSON.
+If a task needs biometrics (passkey/fingerprint/face unlock), say so immediately via done — a human finger is required, you cannot do it.
+For app installs use open_url market://details?id=<package>, then click Install, then {"action":"wait","seconds":15} until installed.
+Reply in the user's language, keep chat replies short."""
 
 def think(task: str, tree: str, history: list) -> dict:
     url = os.environ["PUA_BASE_URL"].rstrip("/") + "/chat/completions"

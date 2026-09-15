@@ -111,16 +111,18 @@ def notification_loop():
                     key = item["key"][:160]
                     if key in seen:
                         continue
-                    seen.add(key)
-                    low = item["title"].lower()
-                    if not any(c in low for c in ADMIN_CHATS):
-                        continue
                     title, text = item["title"], item["text"]
                     if not text:
                         continue
+                    if not any(c in title.lower() for c in ADMIN_CHATS):
+                        continue
+                    key = "msg:" + title.lower() + ":" + text[:120]
+                    if key in seen:
+                        continue
+                    seen.add(key)
                     log(f"incoming from {title}: {text[:80]}")
                     t = chat_task(title, text)
-                    res = run_agent(t)
+                    res = run_agent(t, steps=25)
                     (RESULTS / f"chat-{int(time.time())}.json").write_text(json.dumps(
                         {"chat": title, "msg": text, **res}, indent=2))
                     log(f"chat task done ok={res['ok']} {res['seconds']}s")
@@ -137,11 +139,11 @@ def notification_loop():
                     msgs = _re.findall(r'id=com\.whatsapp:id/message_text text=([^=]+) desc=', tree)
                     if msgs:
                         last = msgs[-1].strip()
-                        key = "fg:" + admin_open + ":" + last[:120]
+                        key = "msg:" + admin_open + ":" + last[:120]
                         if last and key not in seen:
                             seen.add(key)
                             log(f"incoming (fg) from {admin_open}: {last[:80]}")
-                            res = run_agent(chat_task(admin_open, last))
+                            res = run_agent(chat_task(admin_open, last), steps=25)
                             (RESULTS / f"chat-{int(time.time())}.json").write_text(json.dumps(
                                 {"chat": admin_open, "msg": last, **res}, indent=2))
                             log(f"chat task done ok={res['ok']} {res['seconds']}s")
@@ -150,7 +152,7 @@ def notification_loop():
                             tree2 = broadcast("DUMP")
                             msgs2 = _re.findall(r'id=com\.whatsapp:id/message_text text=([^=]+) desc=', tree2)
                             if msgs2:
-                                seen.add("fg:" + admin_open + ":" + msgs2[-1].strip()[:120])
+                                seen.add("msg:" + admin_open + ":" + msgs2[-1].strip()[:120])
             if len(seen) > 5000:
                 seen = set(list(seen)[-2000:])
             state_f.write_text(json.dumps(sorted(seen)))
