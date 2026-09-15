@@ -38,6 +38,25 @@ def dump_tree() -> str:
             lines.append(f'{cls.split(".")[-1]}|{rid}|{txt or desc}|{bounds}')
     return "\n".join(lines[:160])
 
+def current_app(tree: str) -> str:
+    for ln in tree.splitlines():
+        m = re.search(r'package=([a-zA-Z0-9._]+)', ln)
+        if m:
+            return m.group(1)
+    return "?"
+
+def read_url(url: str) -> str:
+    """Fetch a page and return rough text (Termux-side web use, no browser UI)."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            html = r.read(400_000).decode("utf-8", "replace")
+        html = re.sub(r'(?s)<(script|style|noscript)[^>]*>.*?</\1>', ' ', html)
+        text = re.sub(r'(?s)<[^>]+>', ' ', html)
+        return re.sub(r'\s+', ' ', text).strip()[:4000]
+    except Exception as e:
+        return f"read_url error: {e}"
+
 def act(a: dict) -> str:
     ac = a.get("action")
     if ac == "click":
@@ -61,6 +80,15 @@ def act(a: dict) -> str:
         return broadcast("OPEN_URL", "--es", "url", a["url"])[:200]
     if ac in ("back", "home", "recents"):
         return broadcast(ac.upper())[:200]
+    if ac == "read_url":
+        return read_url(a["url"])[:3500]
+    if ac == "remember":
+        try:
+            with open(os.path.expanduser("~/.pua/memory.md"), "a") as f:
+                f.write(f"- {a.get('fact', '')}\n")
+            return "remembered"
+        except Exception as e:
+            return f"remember error: {e}"
     if ac == "wait":
         time.sleep(min(int(a.get("seconds", 3)), 30))
         return f"waited {a.get('seconds', 3)}s"
@@ -76,6 +104,8 @@ Actions:
 {"action":"type","text":"..."}  — into focused field
 {"action":"launch","package":"com.whatsapp"}
 {"action":"open_url","url":"https://..."}
+{"action":"read_url","url":"https://..."}  — fetch page TEXT directly (best for web info)
+{"action":"remember","fact":"..."}  — persist a fact across tasks
 {"action":"back"} {"action":"home"} {"action":"recents"}
 {"action":"done","answer":"final answer"}
 Rules: prefer click_id/set_text with full resourceIds over coordinates. Never repeat the same failing action twice. Reply ONLY with the JSON.
@@ -83,14 +113,21 @@ If a task needs biometrics (passkey/fingerprint/face unlock), say so immediately
 For app installs use open_url market://details?id=<package>, then click Install, then {"action":"wait","seconds":15} until installed.
 Reply in the user's language, keep chat replies short."""
 
+def memory_block() -> str:
+    try:
+        mem = open(os.path.expanduser("~/.pua/memory.md")).read().strip()
+        return ("\nPERSISTENT MEMORY:\n" + mem[-2500:]) if mem else ""
+    except Exception:
+        return ""
+
 def think(task: str, tree: str, history: list) -> dict:
     url = os.environ["PUA_BASE_URL"].rstrip("/") + "/chat/completions"
     payload = {
         "model": os.environ["PUA_MODEL"],
         "temperature": 1,
         "messages": [
-            {"role": "system", "content": SYSTEM},
-            {"role": "user", "content": f"TASK: {task}\n\nHISTORY:\n" + "\n".join(history[-12:]) + f"\n\nCURRENT UI TREE:\n{tree}"},
+            {"role": "system", "content": SYSTEM + memory_block()},
+            {"role": "user", "content": f"TASK: {task}\nCURRENT APP: {current_app(tree)}\n\nHISTORY:\n" + "\n".join(history[-12:]) + f"\n\nCURRENT UI TREE:\n{tree}"},
         ],
     }
     req = urllib.request.Request(url, data=json.dumps(payload).encode(),
