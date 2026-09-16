@@ -70,6 +70,10 @@ def notifications(package: str) -> list:
                           "text": parts[3], "key": parts[4]})
     return items
 
+
+def _norm(t):
+    return re.sub(r"[^a-z0-9]", "", t.lower())[:80]
+
 def run_agent(task: str, steps: int = 18, timeout: int = 600) -> dict:
     t0 = time.time()
     try:
@@ -96,12 +100,14 @@ def chat_task(chat_title: str, text: str) -> str:
 
 def notification_loop():
     seen = set()
+    own_replies = []  # texts WE sent, normalized — never treat as incoming
     state_f = PUA / "bot-seen.json"
     if state_f.exists():
         try:
             seen = set(json.loads(state_f.read_text()))
         except Exception:
             seen = set()
+    own_replies = []  # texts WE sent, normalized — never treat as incoming
     log(f"notification loop up, watching {WATCH_PACKAGES} for {ADMIN_CHATS}")
     while True:
         try:
@@ -126,6 +132,8 @@ def notification_loop():
                     (RESULTS / f"chat-{int(time.time())}.json").write_text(json.dumps(
                         {"chat": title, "msg": text, **res}, indent=2))
                     log(f"chat task done ok={res['ok']} {res['seconds']}s")
+                    if res.get("answer"):
+                        own_replies.append(res["answer"])
             # path 2: active-chat polling (WhatsApp in foreground, admin chat open)
             tree = broadcast("DUMP")
             if "com.whatsapp:id/conversation_contact_name" in tree or "com.whatsapp:id/message_text" in tree:
@@ -140,6 +148,9 @@ def notification_loop():
                     if msgs:
                         last = msgs[-1].strip()
                         key = "msg:" + admin_open + ":" + last[:120]
+                        if last and any(_norm(last) == _norm(r) and _norm(r) for r in own_replies[-5:]):
+                            seen.add(key)
+                            continue
                         if last and key not in seen:
                             seen.add(key)
                             log(f"incoming (fg) from {admin_open}: {last[:80]}")
@@ -147,6 +158,8 @@ def notification_loop():
                             (RESULTS / f"chat-{int(time.time())}.json").write_text(json.dumps(
                                 {"chat": admin_open, "msg": last, **res}, indent=2))
                             log(f"chat task done ok={res['ok']} {res['seconds']}s")
+                            if res.get("answer"):
+                                own_replies.append(res["answer"])
                             # anti-echo: whatever is the newest message now (likely our own
                             # reply) must not be treated as a new incoming message
                             tree2 = broadcast("DUMP")
